@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "tomgrabber.download-directory",
+      "type": "java.lang.String",
+      "description": "Description for tomgrabber.download-directory."
+    },
+    {
+      "name": "tomgrabber.first-tom-date",
+      "type": "java.lang.String",
+      "description": "Description for tomgrabber.first-tom-date."
+    },
+    {
+      "name": "tomgrabber.tazclient.useragent",
+      "type": "java.lang.String",
+      "description": "Description for tomgrabber.tazclient.useragent."
+    }
+  ] }
