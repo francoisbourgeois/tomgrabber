@@ -33,27 +33,31 @@ public class TazHtmlClient {
                 .build();
     }
 
-    public Document getTomOfTheDayPage(LocalDate day) throws IOException {
+    public Document getTomOfTheDayPage(LocalDate date) throws IOException {
         Connection connection = Jsoup
-                .connect(getTomOfTheDayRequestUrl(day))
+                .connect(getTomOfTheDayRequestUrl(date))
                 .userAgent(useragent);
 
         return connection.get();
     }
 
-    public InputStream download(URI source) throws IOException, InterruptedException {
+    public InputStream download(URI source) throws IOException {
         log.debug("Requesting {}", source.toString());
 
-        HttpResponse<InputStream> response = httpClient.send(
-                getDownloadImageHttpRequest(source),
-                HttpResponse.BodyHandlers.ofInputStream()
-        );
+        try {
+            HttpResponse<InputStream> response = httpClient.send(
+                    getDownloadImageHttpRequest(source),
+                    HttpResponse.BodyHandlers.ofInputStream()
+            );
 
-        if (response.statusCode() != 200) {
-            throw new HttpStatusException("status not 200", response.statusCode(), source.toString());
+            if (response.statusCode() != 200) {
+                throw new HttpStatusException("status not 200", response.statusCode(), source.toString());
+            }
+
+            return response.body();
+        } catch (InterruptedException e) {
+            throw new IOException(e);
         }
-
-        return response.body();
     }
 
     private HttpRequest getDownloadImageHttpRequest(URI source) {

@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 @Repository
 @Slf4j
@@ -18,14 +20,14 @@ public class ImageRepository {
     @Value("${tomgrabber.download-directory}")
     private String directoryPath;
 
-    private File downloadDirectory;
+    private File imageDirectory;
 
     @PostConstruct
     public void init() {
-        downloadDirectory = getDownloadDirectory();
+        imageDirectory = getImageDirectory();
     }
 
-    public void saveFile(String filename, InputStream inputStream) throws IOException {
+    public void create(String filename, InputStream inputStream) throws IOException {
         log.debug("Creating image file: {}", filename);
 
         File file = createFile(filename);
@@ -34,13 +36,21 @@ public class ImageRepository {
         }
     }
 
+    public boolean exists(String filename) {
+        return resolveFile(filename).exists();
+    }
+
+    private File resolveFile(String filename) {
+        return imageDirectory.toPath().resolve(filename).toFile();
+    }
+
     private File createFile(String filename) throws IOException {
-        File file = downloadDirectory.toPath().resolve(filename).toFile();
+        File file = resolveFile(filename);
         file.createNewFile();
         return file;
     }
 
-    private File getDownloadDirectory() {
+    private File getImageDirectory() {
         File downloadDirectory = new File(directoryPath);
 
         if (downloadDirectory.exists()) {
@@ -55,4 +65,9 @@ public class ImageRepository {
         return downloadDirectory;
     }
 
+    public Stream<String> getFilenames() {
+        return Arrays.stream(imageDirectory.listFiles())
+                .filter(File::isFile)
+                .map(File::getName);
+    }
 }

@@ -16,7 +16,7 @@ public class TomgrabberApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		grabberService.test();
+		grabberService.downloadAllMissingToms();
 	}
 
 	public static void main(String[] args) {
