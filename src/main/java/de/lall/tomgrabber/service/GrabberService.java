@@ -37,7 +37,7 @@ public class GrabberService {
         Set<LocalDate> knownDates = getValuesFromSet(knownToms, Tom::getDate);
         knownTomIds = getValuesFromSet(knownToms, Tom::getId);
 
-        LocalDate.parse(startDate).datesUntil(LocalDate.now())
+        LocalDate.parse(startDate).datesUntil(LocalDate.now().plusDays(1))
                 .filter((date -> !knownDates.contains(date)))
                 .forEach(this::fetchTom);
     }
